@@ -63,4 +63,5 @@ streamlit run src/dashboard/app.py
 
 ## Team
 
-- TODO: Namen eintragen
+- Leon Laudwein
+- 
