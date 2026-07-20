@@ -1,0 +1,15 @@
+feature
+home_elo
+away_elo
+elo_diff
+home_form
+away_form
+home_avg_scored
+home_avg_conceded
+away_avg_scored
+away_avg_conceded
+h2h_home_wins
+h2h_draws
+h2h_home_losses
+h2h_win_rate
+is_neutral
