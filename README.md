@@ -241,6 +241,7 @@ Historische Spieldaten
 
 **Leon Laudwein**  
 **Fabian Jendrzej**
+**Lukas Ruth**
 
 ---
 
