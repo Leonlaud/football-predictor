@@ -1,0 +1,13 @@
+# Farbschema passend zur Zwischenstandspraesentation
+[theme]
+base = "light"
+primaryColor = "#1B7F4C"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F3FAF6"
+textColor = "#0F2A1D"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false
