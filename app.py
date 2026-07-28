@@ -68,6 +68,16 @@ RESULT_KEYS = {
 st.markdown(
     f"""
     <style>
+      /* Hintergrund fest auf Weiss setzen - unabhaengig davon, ob der
+         Browser oder das Betriebssystem einen Dark Mode erzwingt. Ohne das
+         ueberschreibt z.B. Safari/Chrome im Dark Mode den Seitenhintergrund
+         auf dunkel, waehrend unsere Textfarben fuer hellen Hintergrund
+         gestaltet sind - das Ergebnis waere dunkler Text auf dunklem Grund. */
+      [data-testid="stAppViewContainer"], [data-testid="stHeader"],
+      [data-testid="stSidebar"], .main {{
+        background-color: #FFFFFF !important;
+        color-scheme: light;
+      }}
       .block-container {{ padding-top: 1.4rem; max-width: 1400px; }}
 
       .app-header {{
