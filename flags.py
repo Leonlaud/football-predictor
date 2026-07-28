@@ -67,6 +67,9 @@ _OVERRIDES: dict[str, str] = {
     "DR Congo": _flag_from_alpha2("CD"),
     "Republic of Ireland": _flag_from_alpha2("IE"),
     "China PR": _flag_from_alpha2("CN"),
+    # "Niger" ist als Teilstring in "Nigeria" enthalten - die Fuzzy-Suche
+    # waehlt deshalb faelschlich Nigeria (NG) statt Niger (NE) als Top-Treffer.
+    "Niger": _flag_from_alpha2("NE"),
 }
 
 # --------------------------------------------------------------------------
