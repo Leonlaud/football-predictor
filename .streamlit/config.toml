@@ -1,0 +1,14 @@
+# Dunkles Farbschema - fest gesetzt, damit die App unabhaengig vom
+# Betriebssystem-Theme immer gleich aussieht.
+[theme]
+base = "dark"
+primaryColor = "#4ADE80"
+backgroundColor = "#0B1F14"
+secondaryBackgroundColor = "#12301F"
+textColor = "#F2FBF5"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false

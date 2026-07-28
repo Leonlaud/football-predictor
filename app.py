@@ -44,11 +44,16 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-DARK = "#0F2A1D"
-GREEN = "#1B7F4C"
-GREEN_LIGHT = "#4ADE80"
-GREEN_PALE = "#EAF7EF"
-GREY = "#6B7C72"
+# Dunkles Farbschema. Alle Schriften liegen auf hellen Toenen, damit sie
+# unabhaengig vom Betriebssystem-Theme lesbar bleiben.
+BG = "#0B1F14"          # Seitenhintergrund
+SURFACE = "#12301F"     # Karten / Panels
+BORDER = "#1F4D33"      # Rahmen
+TEXT = "#F2FBF5"        # Primaerschrift (nahezu weiss)
+TEXT_MUTED = "#A8C6B4"  # Sekundaerschrift
+GREEN = "#22A15A"       # Balken / Akzentflaechen
+GREEN_LIGHT = "#4ADE80"  # Akzentschrift
+DARK = SURFACE           # Alias, damit aeltere Referenzen weiter greifen
 
 MODEL_FILES = {
     "XGBoost + SMOTE": "xgboost_smote_best.pkl",
@@ -68,27 +73,42 @@ RESULT_KEYS = {
 st.markdown(
     f"""
     <style>
-      /* Hintergrund fest auf Weiss setzen - unabhaengig davon, ob der
-         Browser oder das Betriebssystem einen Dark Mode erzwingt. Ohne das
-         ueberschreibt z.B. Safari/Chrome im Dark Mode den Seitenhintergrund
-         auf dunkel, waehrend unsere Textfarben fuer hellen Hintergrund
-         gestaltet sind - das Ergebnis waere dunkler Text auf dunklem Grund. */
+      /* Dunkles Theme fest verdrahten. Alle Schriften liegen bewusst auf
+         hellen Toenen (nahezu weiss), damit sie unabhaengig davon lesbar
+         bleiben, ob Browser oder Betriebssystem einen Dark Mode erzwingen. */
       [data-testid="stAppViewContainer"], [data-testid="stHeader"],
-      [data-testid="stSidebar"], .main {{
-        background-color: #FFFFFF !important;
-        color-scheme: light;
+      [data-testid="stBottomBlockContainer"], .main {{
+        background-color: {BG} !important;
+        color-scheme: dark;
       }}
+      [data-testid="stSidebar"] {{
+        background-color: {SURFACE} !important;
+        border-right: 1px solid {BORDER};
+      }}
+
+      /* Grundschrift durchgaengig hell */
+      [data-testid="stAppViewContainer"], [data-testid="stSidebar"],
+      .stMarkdown, .stMarkdown p, .stMarkdown li,
+      h1, h2, h3, h4, h5, h6, label, .stSelectbox label {{
+        color: {TEXT} !important;
+      }}
+      [data-testid="stCaptionContainer"], .stCaption, small {{
+        color: {TEXT_MUTED} !important;
+      }}
+      code {{ color: {GREEN_LIGHT} !important; background: rgba(74,222,128,0.10) !important; }}
+
       .block-container {{ padding-top: 1.4rem; max-width: 1400px; }}
 
       .app-header {{
-        background: {DARK};
+        background: {SURFACE};
+        border: 1px solid {BORDER};
         border-radius: 14px;
         padding: 1.1rem 1.6rem;
         display: flex; align-items: center; justify-content: space-between;
         margin-bottom: 1.4rem;
       }}
       .app-header h1 {{
-        color: #FFFFFF; font-size: 1.55rem; font-weight: 700;
+        color: {TEXT}; font-size: 1.55rem; font-weight: 700;
         margin: 0; letter-spacing: -0.01em;
       }}
       .app-header .sub {{ color: {GREEN_LIGHT}; font-size: 0.82rem; margin-top: 0.15rem; }}
@@ -100,32 +120,41 @@ st.markdown(
       }}
 
       .card {{
-        background: {GREEN_PALE}; border: 1px solid #CFE8D9;
+        background: {SURFACE}; border: 1px solid {BORDER};
         border-radius: 12px; padding: 1rem 1.2rem; height: 100%;
       }}
-      .card h4 {{ margin: 0 0 0.2rem 0; color: {DARK}; font-size: 0.95rem; }}
-      .card p  {{ margin: 0; color: {GREY}; font-size: 0.82rem; }}
+      .card h4 {{ margin: 0 0 0.2rem 0; color: {TEXT}; font-size: 0.95rem; }}
+      .card p  {{ margin: 0; color: {TEXT_MUTED}; font-size: 0.82rem; }}
 
       .probrow {{ display: flex; align-items: center; gap: 0.8rem; margin: 0.55rem 0; }}
-      .probrow .lbl {{ width: 210px; font-size: 0.92rem; color: {DARK}; font-weight: 500; }}
-      .probrow .track {{ flex: 1; background: #E3EFE8; border-radius: 999px; height: 13px; }}
-      .probrow .fill  {{ background: {GREEN}; border-radius: 999px; height: 13px; }}
-      .probrow .val   {{ width: 62px; text-align: right; font-weight: 700; color: {DARK}; }}
+      .probrow .lbl {{ width: 230px; font-size: 0.92rem; color: {TEXT}; font-weight: 500; }}
+      .probrow .track {{ flex: 1; background: rgba(255,255,255,0.10); border-radius: 999px; height: 13px; }}
+      .probrow .fill  {{ background: {GREEN_LIGHT}; border-radius: 999px; height: 13px; }}
+      .probrow .val   {{ width: 66px; text-align: right; font-weight: 700; color: {TEXT}; }}
 
       .scorebox {{
-        border: 1px solid #CFE8D9; border-radius: 10px; text-align: center;
-        padding: 0.6rem 0.2rem; background: #FFFFFF;
+        border: 1px solid {BORDER}; border-radius: 10px; text-align: center;
+        padding: 0.6rem 0.2rem; background: {SURFACE};
       }}
-      .scorebox .s {{ font-size: 1.35rem; font-weight: 700; color: {DARK}; }}
-      .scorebox .p {{ font-size: 0.8rem; color: {GREEN}; font-weight: 600; }}
+      .scorebox .s {{ font-size: 1.35rem; font-weight: 700; color: {TEXT}; }}
+      .scorebox .p {{ font-size: 0.8rem; color: {GREEN_LIGHT}; font-weight: 600; }}
 
       .callout {{
-        background: {DARK}; color: #FFFFFF; border-radius: 12px;
-        padding: 0.9rem 1.2rem; margin-top: 0.6rem;
+        background: {SURFACE}; color: {TEXT};
+        border: 1px solid {BORDER}; border-left: 4px solid {GREEN_LIGHT};
+        border-radius: 12px; padding: 0.9rem 1.2rem; margin-top: 0.6rem;
       }}
       .callout b {{ color: {GREEN_LIGHT}; }}
 
-      div[data-testid="stMetricValue"] {{ color: {DARK}; }}
+      /* Metriken */
+      div[data-testid="stMetricValue"] {{ color: {TEXT} !important; }}
+      div[data-testid="stMetricLabel"], div[data-testid="stMetricLabel"] p {{
+        color: {TEXT_MUTED} !important;
+      }}
+
+      /* Tabs */
+      button[data-baseweb="tab"] {{ color: {TEXT_MUTED} !important; }}
+      button[data-baseweb="tab"][aria-selected="true"] {{ color: {GREEN_LIGHT} !important; }}
     </style>
     """,
     unsafe_allow_html=True,
@@ -227,6 +256,7 @@ with st.sidebar:
     model_label = st.selectbox(
         "Welches Modell rechnet?",
         list(models.keys()),
+        key="model_choice",
         help="XGBoost + SMOTE erzielt im Test die beste Accuracy, "
              "LogReg + SMOTE den besten F1-Macro über alle drei Klassen.",
     )
@@ -276,10 +306,10 @@ def confidence_label(probs: np.ndarray) -> tuple[str, str]:
     """Grobe Einordnung, wie eindeutig die Prognose ist."""
     top = float(np.max(probs))
     if top >= 0.60:
-        return "hoch", GREEN
+        return "hoch", GREEN_LIGHT
     if top >= 0.45:
-        return "mittel", "#B7791F"
-    return "niedrig", "#B44A3A"
+        return "mittel", "#F0C05A"
+    return "niedrig", "#F08A72"
 
 
 # --------------------------------------------------------------------------
@@ -294,28 +324,46 @@ tab_predict, tab_compare, tab_importance = st.tabs(
 # TAB 1 – Match Prediction
 # ==========================================================================
 with tab_predict:
-    default_home = teams.index("Germany") if "Germany" in teams else 0
-    default_away = teams.index("Ivory Coast") if "Ivory Coast" in teams else 1
-
+    # Bewusst keine Vorbelegung: die App startet mit leerer Auswahl.
     c1, c2, c3 = st.columns([5, 1, 5])
     with c1:
-        home_team = st.selectbox("Heimmannschaft", teams, index=default_home,
-                                 format_func=with_flag)
+        home_team = st.selectbox(
+            "Heimmannschaft", teams, index=None,
+            placeholder="Mannschaft wählen …",
+            format_func=with_flag, key="home_team",
+        )
     with c2:
         st.markdown(
-            "<div style='text-align:center;padding-top:2.1rem;"
-            "font-weight:700;color:#6B7C72'>vs</div>",
+            f"<div style='text-align:center;padding-top:2.1rem;"
+            f"font-weight:700;color:{TEXT_MUTED}'>vs</div>",
             unsafe_allow_html=True,
         )
     with c3:
-        away_team = st.selectbox("Auswärtsmannschaft", teams, index=default_away,
-                                 format_func=with_flag)
+        away_team = st.selectbox(
+            "Auswärtsmannschaft", teams, index=None,
+            placeholder="Mannschaft wählen …",
+            format_func=with_flag, key="away_team",
+        )
 
-    run = st.button("Vorhersage berechnen  ▶", type="primary", width="stretch")
+    teams_chosen = bool(home_team) and bool(away_team)
+    same_team = teams_chosen and home_team == away_team
 
-    if home_team == away_team:
+    run = st.button(
+        "Vorhersage berechnen  ▶", type="primary", width="stretch",
+        disabled=not teams_chosen or same_team,
+    )
+
+    if same_team:
         st.warning("Bitte zwei verschiedene Mannschaften auswählen.")
-    elif run:
+
+    # Signatur der aktuellen Eingaben - erkennt, ob ein gespeichertes
+    # Ergebnis noch zu den Einstellungen in der Seitenleiste passt.
+    current_sig = (
+        home_team, away_team, tournament_imp, bool(neutral),
+        match_date.isoformat(), model_label,
+    )
+
+    if run and teams_chosen and not same_team:
         features = build_match_features(
             home_team, away_team, states, h2h,
             match_date=match_date,
@@ -324,6 +372,29 @@ with tab_predict:
         )
         X = features_to_frame(features, feature_order)
         probs = model.predict_proba(X)[0]
+        # Ergebnis merken, damit es einen Tab-Wechsel ueberlebt. Streamlit
+        # fuehrt bei jeder Interaktion das ganze Skript neu aus; ohne
+        # session_state waere `run` dann wieder False und die Ausgabe weg.
+        st.session_state["prediction"] = {
+            "sig": current_sig, "home": home_team, "away": away_team,
+            "features": features, "probs": probs,
+        }
+
+    saved = st.session_state.get("prediction")
+
+    if saved is not None:
+        home_team = saved["home"]
+        away_team = saved["away"]
+        features = saved["features"]
+        probs = saved["probs"]
+
+        if saved["sig"] != current_sig:
+            st.info(
+                "Die Einstellungen haben sich geändert – das Ergebnis unten "
+                "stammt noch aus der letzten Berechnung. Für aktuelle Werte "
+                "erneut **Vorhersage berechnen** klicken.",
+                icon="🔄",
+            )
 
         conf_text, conf_color = confidence_label(probs)
         st.markdown(
@@ -456,9 +527,11 @@ with tab_compare:
                         name="F1-Macro", marker_color=GREEN_LIGHT)
             fig.update_layout(
                 barmode="group", height=320, margin=dict(l=10, r=10, t=30, b=10),
-                yaxis=dict(range=[0, 0.8], title=None),
+                yaxis=dict(range=[0, 0.8], title=None,
+                           gridcolor="rgba(255,255,255,0.10)"),
                 legend=dict(orientation="h", y=1.15, x=0),
-                plot_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+                font=dict(color=TEXT),
             )
             st.plotly_chart(fig, width="stretch")
 
@@ -500,12 +573,13 @@ with tab_compare:
 
             fig = go.Figure(go.Heatmap(
                 z=matrix, x=labels, y=labels, text=text, texttemplate="%{text}",
-                colorscale=[[0, "#FFFFFF"], [1, GREEN]], showscale=False,
+                colorscale=[[0, SURFACE], [1, GREEN_LIGHT]], showscale=False,
             ))
             fig.update_layout(
                 height=380, margin=dict(l=10, r=10, t=30, b=10),
                 xaxis_title="Vorhergesagt", yaxis_title="Tatsächlich",
                 yaxis=dict(autorange="reversed"),
+                paper_bgcolor="rgba(0,0,0,0)", font=dict(color=TEXT),
             )
             st.plotly_chart(fig, width="stretch")
             st.caption(
@@ -540,7 +614,7 @@ with tab_importance:
         with chart_col:
             fig = go.Figure(go.Bar(
                 x=sub["importance"], y=sub["feature"], orientation="h",
-                marker_color=GREEN,
+                marker_color=GREEN_LIGHT,
                 text=[f"{v:.3f}" for v in sub["importance"]],
                 textposition="outside",
             ))
@@ -548,7 +622,9 @@ with tab_importance:
                 height=max(360, 26 * len(sub)),
                 margin=dict(l=10, r=40, t=20, b=10),
                 xaxis_title="Wichtigkeit (relativ)", yaxis_title=None,
-                plot_bgcolor="rgba(0,0,0,0)",
+                xaxis=dict(gridcolor="rgba(255,255,255,0.10)"),
+                plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+                font=dict(color=TEXT),
             )
             st.plotly_chart(fig, width="stretch")
 
