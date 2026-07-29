@@ -14,35 +14,36 @@ Im Rahmen des Moduls **KI & Intelligence Engineering** an der **DHBW Mannheim** 
 - Modelltraining und Evaluation
 - Hyperparameter-Optimierung
 - Visualisierung der Ergebnisse
+- interaktivem Dashboard zur Live-Vorhersage (Streamlit)
 
 Im Laufe des Projekts entstanden zwei Versionen der Pipeline:
 
 - **Version 1** als Basisimplementierung
 - **Version 2** mit Performance-Optimierungen, erweiterten Features sowie Methoden zum Umgang mit Klassenungleichgewichten (SMOTE & Class Weights)
 
+Darauf aufbauend steht ein **Streamlit-Dashboard**, mit dem sich beliebige Länderspiele interaktiv vorhersagen lassen.
+
 ---
 
 # 📂 Projektstruktur
 
 ```text
-football-match-outcome-predictor/
+football-predictor/
 │
-├── data/
-│   ├── raw/                     # Rohdaten
-│   ├── processed/               # Aufbereitete Datensätze
-│   └── models/                  # Gespeicherte ML-Modelle
+├── app.py                       # Streamlit-Dashboard
+├── train_export.py              # Trainiert die Modelle & exportiert .pkl + Auswertungs-CSVs
+├── live_features.py             # Rekonstruiert Elo/Form/H2H für kommende Spiele
+├── paths.py                     # Löst Daten-/Modellpfade auf
+├── flags.py                     # Flaggen-Zuordnung für die Team-Auswahl
+├── .streamlit/
+│   └── config.toml              # Farbschema des Dashboards
 │
-├── notebooks/                   # Jupyter Notebooks
-│
-├── src/
-│   ├── datenpipeline.py
-│   ├── datenpipeline_v2_optimized.py
-│   ├── modelltraining.py
-│   └── modelltraining_v2.py
-│
-├── reports/
-│   ├── figures/                 # Visualisierungen
-│   └── results/                 # Evaluationsergebnisse
+├── notebooks/
+│   ├── datenpipeline_v2_optimized.ipynb
+│   ├── modelltraining_v2.ipynb
+│   ├── data/
+│   │   └── processed_v2/        # Aufbereitete Datensätze (u. a. matches_full.csv)
+│   └── models_v2/                # Modelle (.pkl, lokal erzeugt) & Auswertungs-CSVs
 │
 ├── requirements.txt
 └── README.md
@@ -56,7 +57,7 @@ Repository klonen:
 
 ```bash
 git clone <repository-url>
-cd football-match-outcome-predictor
+cd football-predictor
 ```
 
 Virtuelle Umgebung erstellen:
@@ -134,6 +135,44 @@ python src/modelltraining_v2.py
 
 ---
 
+## 5️⃣ Modelle für das Dashboard erzeugen
+
+Das Dashboard braucht trainierte Modelle als `.pkl`-Dateien. Diese liegen aus
+Größengründen nicht im Repository und müssen einmalig lokal erzeugt werden:
+
+```bash
+python train_export.py
+```
+
+Schreibt nach `notebooks/models_v2/`:
+
+- `xgboost_smote_best.pkl`, `xgboost_weighted_best.pkl`, `random_forest_best.pkl`, `logreg_smote_best.pkl`
+- `model_results.csv` (Accuracy, F1-Macro, Log Loss je Modell)
+- `confusion_matrices.csv`
+- `feature_importances.csv`
+
+---
+
+## 6️⃣ Dashboard starten
+
+```bash
+streamlit run app.py
+```
+
+Öffnet sich unter `http://localhost:8501`. Zwei Nationen auswählen, Wettbewerb
+und Spielort in der Seitenleiste einstellen und **Vorhersage berechnen**
+klicken. Das Dashboard zeigt:
+
+- **Match Prediction** – Siegwahrscheinlichkeiten, prognostizierter Endstand, Ausgangslage (Elo, Form, Head-to-Head)
+- **Modellvergleich** – Testmetriken und Konfusionsmatrix aller Modelle
+- **Feature Importance** – wichtigste Einflussfaktoren je Modell
+
+Da die 43 Trainings-Features nur für bereits gespielte Partien existieren,
+rekonstruiert `live_features.py` den aktuellen Zustand beider Teams
+(Elo, Form, Torstatistik, Head-to-Head) aus der kompletten Spielhistorie.
+
+---
+
 # 🧠 Verwendete Modelle
 
 Folgende Klassifikationsmodelle werden untersucht:
@@ -202,6 +241,9 @@ Die verwendeten Datensätze stammen aus öffentlich verfügbaren Quellen:
 - Matplotlib
 - Seaborn
 - Jupyter Notebook
+- Streamlit
+- Plotly
+- Pycountry
 
 ---
 
@@ -233,6 +275,9 @@ Historische Spieldaten
             │
             ▼
     Bestes Modell
+            │
+            ▼
+  Streamlit-Dashboard
 ```
 
 ---
