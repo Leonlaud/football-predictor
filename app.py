@@ -135,6 +135,10 @@ st.markdown(
       .scorebox {{
         border: 1px solid {BORDER}; border-radius: 10px; text-align: center;
         padding: 0.6rem 0.2rem; background: {SURFACE};
+        /* Zusaetzlich zum unteren Abstand des Callouts gesetzt: In den
+           Streamlit-Spaltencontainern kann der Margin des vorherigen
+           Blocks kollabieren, der Abstand waere dann wirkungslos. */
+        margin-top: 0.4rem;
       }}
       .scorebox .s {{ font-size: 1.35rem; font-weight: 700; color: {TEXT}; }}
       .scorebox .p {{ font-size: 0.8rem; color: {GREEN_LIGHT}; font-weight: 600; }}
@@ -142,7 +146,10 @@ st.markdown(
       .callout {{
         background: {SURFACE}; color: {TEXT};
         border: 1px solid {BORDER}; border-left: 4px solid {GREEN_LIGHT};
-        border-radius: 12px; padding: 0.9rem 1.2rem; margin-top: 0.6rem;
+        border-radius: 12px; padding: 0.9rem 1.2rem;
+        /* Unterer Abstand, damit der Kasten nicht direkt auf den
+           darunterliegenden Ergebnis-Kacheln bzw. der Bildunterschrift klebt. */
+        margin: 0.6rem 0 1.1rem 0;
       }}
       .callout b {{ color: {GREEN_LIGHT}; }}
 
